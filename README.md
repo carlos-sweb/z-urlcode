@@ -64,9 +64,22 @@ and publishes it to GitHub Pages on pushes to `master` and version tags.
 
 ## Dependency
 
-```zig
-// build.zig.zon
-.dependencies = .{
-    .zurlcode = .{ .path = "../z-urlcode" },
-},
+From your project's directory, download the tagged release and save the
+dependency URL and content hash in `build.zig.zon`:
+
+```sh
+zig fetch --save=zurlcode https://github.com/carlos-sweb/z-urlcode/archive/refs/tags/v0.1.0.tar.gz
 ```
+
+Then import its module in your `build.zig`:
+
+```zig
+const zurlcode = b.dependency("zurlcode", .{
+    .target = target,
+    .optimize = optimize,
+});
+exe.root_module.addImport("zurlcode", zurlcode.module("zurlcode"));
+```
+
+Here `exe` is your executable's compile step, and `target` and `optimize`
+are your project's build options.
