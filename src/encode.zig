@@ -9,11 +9,13 @@ fn appendPercentByte(list: *std.ArrayList(u8), allocator: Allocator, byte: u8) !
     try list.appendSlice(allocator, &.{ '%', hex_digits[byte >> 4], hex_digits[byte & 0xF] });
 }
 
-/// ECMA-262 19.2.6.1's Encode(string, unescapedSet). `s` must be valid
+/// ECMA-262 19.2.6.5's Encode operation. `s` must be valid
 /// UTF-8; a lone surrogate (the spec's other URIError case for Encode)
 /// can't be represented in UTF-8 to begin with, so it can't reach this
 /// function -- see z-urlcode's README for what that means for callers
 /// whose string type still allows constructing one some other way.
+/// Returns an owned slice; the caller must free it with `allocator`.
+/// Invalid input returns `error.InvalidUtf8`; allocation can return `error.OutOfMemory`.
 pub fn encode(allocator: Allocator, s: []const u8, comptime set: CharSet) EncodeError![]u8 {
     var out: std.ArrayList(u8) = .empty;
     errdefer out.deinit(allocator);

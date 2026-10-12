@@ -37,10 +37,13 @@ fn readPercentByte(s: []const u8, pos: usize) UrlcodeError!u8 {
     return hexByte(s[pos + 1], s[pos + 2]);
 }
 
-/// ECMA-262 19.2.6.2's Decode(string, reservedSet). `reservedSet` is
+/// ECMA-262 19.2.6.6's Decode operation. `reservedSet` is
 /// `uriReserved + "#"` when `keep_reserved` is true (`decodeURI`) or empty
 /// when false (`decodeURIComponent`) -- a reserved-set `%XY` is copied
 /// through verbatim instead of being unescaped.
+/// Input must be valid UTF-8; literal bytes are copied without validation.
+/// Returns an owned slice; the caller must free it with `allocator`.
+/// Invalid escapes return `error.MalformedUri`; allocation can return `error.OutOfMemory`.
 pub fn decode(allocator: Allocator, s: []const u8, keep_reserved: bool) UrlcodeError![]u8 {
     var out: std.ArrayList(u8) = .empty;
     errdefer out.deinit(allocator);

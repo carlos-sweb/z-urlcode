@@ -4,6 +4,12 @@ ECMA-262 19.2.6's four URI functions — `encodeURI`, `decodeURI`,
 `encodeURIComponent`, `decodeURIComponent` — for Zig. Pure Zig, zero
 dependencies beyond `std`.
 
+Requires **Zig 0.17.0**. [Native Zig API documentation](https://carlos-sweb.github.io/z-urlcode/).
+
+Compatibility covers the four URI transformations on valid UTF-8 strings.
+JavaScript argument conversion (`ToString`) and mapping Zig errors to
+JavaScript exceptions are the host's responsibility.
+
 ## Why a separate repo
 
 Same shape as [z-uuid](https://github.com/carlos-sweb/z-uuid): a small,
@@ -39,6 +45,22 @@ what this library's inputs are), so that branch of the spec never triggers.
 A host whose string type can smuggle one in some other way (e.g. WTF-8)
 would need to reject it before calling `encode`, or accept it'll be
 UTF-8-validated away instead of raising `URIError`.
+
+`decode` validates escaped UTF-8 sequences but copies literal bytes unchanged;
+callers must uphold the valid-UTF-8 input contract. Full JavaScript UTF-16
+string compatibility, including literal lone surrogates, is outside this API's
+documented scope.
+
+## Tests and documentation
+
+```sh
+zig build test
+zig build docs
+```
+
+`zig build docs` generates Zig's native API documentation in `zig-out/docs/`.
+GitHub Actions tests the library with Zig 0.17.0, generates the documentation,
+and publishes it to GitHub Pages on pushes to `master` and version tags.
 
 ## Dependency
 

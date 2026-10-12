@@ -1,4 +1,4 @@
-//! ECMA-262 19.2.6.1's character sets, expressed as membership predicates.
+//! ECMA-262 19.2.6's character sets, expressed as membership predicates.
 
 /// `uriUnescaped`: alphanumerics plus `-_.!~*'()` -- never percent-encoded
 /// by either `encodeURI` or `encodeURIComponent`.
